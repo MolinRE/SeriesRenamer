@@ -1,6 +1,6 @@
 ﻿using HtmlAgilityPack;
 
-namespace SeriesRenamer;
+namespace SeriesRenamer.Helpers;
 
 public static class Extensions
 {
