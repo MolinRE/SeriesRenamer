@@ -6,30 +6,30 @@ using SeriesRenamer;
 var RxEpisodeInfo = new Regex(@".+?S(\d\d)E(\d\d).+?", RegexOptions.Compiled);
 
 Console.WriteLine("Введите путь к папке с сериями:");
-var contentDir = Console.ReadLine();
+var contentDir = Input.ReadLine("/Users/new_omega/Downloads/Torrent/Lost.1080p.OKKO.WEB-DL-SOFCJ/Season 4");
 
 while (!Directory.Exists(contentDir))
 {
     Console.WriteLine("Папка не найдена");
     Console.WriteLine("Введите путь к папке с сериями:");
-    contentDir = Console.ReadLine(); 
+    contentDir = Input.ReadLine(); 
 }
 
 Console.WriteLine($"Найдено файлов: {Directory.GetFiles(contentDir).Length}");
 
 Console.WriteLine("Введите адрес страницы сериала на MyShows:");
-var seriesUrl = Console.ReadLine();
+var seriesUrl = Input.ReadLine("https://myshows.me/view/8/");
 
 var client = new HttpClient();
 
 var htmlDocument = new HtmlDocument();
 htmlDocument.LoadHtml(await client.GetStringAsync(seriesUrl));
 List<MyShowsEpisode> episodes = ParseMyShows(htmlDocument.DocumentNode);
-var title = ParseTitle(htmlDocument.DocumentNode);
+var title = "Lost";//ParseTitle(htmlDocument.DocumentNode);
 
 int total = Directory.GetFiles(contentDir).Length;
 int count = 0;
-foreach (var file in Directory.GetFiles(contentDir))
+foreach (var file in Directory.GetFiles(contentDir).Where(p => RxEpisodeInfo.IsMatch(p)))
 {
     EpisodeFile info = ParseFileName(file);
 
@@ -37,7 +37,7 @@ foreach (var file in Directory.GetFiles(contentDir))
     
     Console.WriteLine($"Старое название: {file}");
     Console.WriteLine($"Новое название: {Path.Combine(contentDir, name)}");
-    Console.WriteLine("Продолжить? Y/N");
+    Console.Write("Продолжить? Y/N");
     var continueChar = Console.ReadLine();
     if (continueChar.ToLower() == "n")
     {
