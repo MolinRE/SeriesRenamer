@@ -25,6 +25,8 @@ Console.WriteLine($"Сериал: {title}");
 Console.WriteLine($"Всего файлов: {total}");
 Console.WriteLine($"Переменовано: {count}");
 
+Input.Exit();
+
 void Debug(string oldName, string newName)
 {
     #if DEBUG

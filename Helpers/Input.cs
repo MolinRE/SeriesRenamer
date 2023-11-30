@@ -38,4 +38,11 @@ public static class Input
         Console.Write("Введите адрес страницы сериала на MyShows: ");
         return Input.ReadLine("https://myshows.me/view/8/");
     }
+
+    public static void Exit()
+    {
+        Console.WriteLine("Для выхода нажмите любую клавишу");
+        Console.ReadKey();
+    }
+    
 }
