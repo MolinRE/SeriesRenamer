@@ -20,12 +20,13 @@ public static class Input
 
     public static string AskContentDir()
     {
-        Console.Write("Введите путь к папке с сериями:");
+        string promt = "Введите путь к папке с сериями: ";
+        Console.Write(promt);
         var input = Input.ReadLine();
         while (!Directory.Exists(input))
         {
             Console.WriteLine("Папка не найдена");
-            Console.Write("Введите путь к папке с сериями:");
+            Console.Write(promt);
             input = Input.ReadLine(); 
         }
         Console.WriteLine($"Найдено файлов: {Directory.GetFiles(input).Length}");
@@ -34,7 +35,7 @@ public static class Input
 
     public static string? AskSeriesUrl()
     {
-        Console.WriteLine("Введите адрес страницы сериала на MyShows:");
+        Console.Write("Введите адрес страницы сериала на MyShows: ");
         return Input.ReadLine("https://myshows.me/view/8/");
     }
 }
