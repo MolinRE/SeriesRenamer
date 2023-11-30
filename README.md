@@ -20,7 +20,8 @@ S3E3. Further Instructions.mkv
 
 Скачать и установить [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
-Скачать последний релиз.
+Скачать ZIP-архив из последнего [релиза](https://github.com/MolinRE/SeriesRenamer/releases), распаковать.
+
 Запустить файл `SeriesRenamer.exe` или в консоли набрать:
 ```shell
 dotnet SeriesRenamer.dll
