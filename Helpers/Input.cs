@@ -9,7 +9,7 @@ public static class Input
     /// <returns>Строка из ввода</returns>
     public static string? ReadLine(string? s = null)
     {
-        if (s == null)
+        if (string.IsNullOrEmpty(s))
         {
             return Console.ReadLine();
         }
@@ -36,7 +36,7 @@ public static class Input
     public static string? AskSeriesUrl()
     {
         Console.Write("Введите адрес страницы сериала на MyShows: ");
-        return Input.ReadLine("https://myshows.me/view/8/");
+        return Input.ReadLine();
     }
 
     public static void Exit()
