@@ -1,13 +1,23 @@
-﻿using SeriesRenamer.Helpers;
+﻿using CacheClient;
+using SeriesRenamer;
+using SeriesRenamer.Helpers;
 using SeriesRenamer.Service;
 
-var client = new HttpClient();
+var options = CommandLine.Parser.Default.ParseArguments<AppOptions>(args).Value;
+
+var client = new HttpCacheClient(Environment.GetEnvironmentVariable("CACHE_DIR")!);
 
 var contentDir = Input.AskContentDir();
 var seriesUrl = Input.AskSeriesUrl();
+if (int.TryParse(seriesUrl, out var showId))
+{
+    seriesUrl = $"https://myshows.me/view/{showId}/";
+}
 
-var myShowsParser = new MyShowsParser(await client.GetStringAsync(seriesUrl));
+var request = await client.GetAsync(seriesUrl);
+var myShowsParser = new MyShowsParser(await request.Content.ReadAsStringAsync());
 var episodes = myShowsParser.ParseEpisodes();
+var seasons = episodes.GroupBy(p => p.SeasonNumber).ToArray();
 var title = myShowsParser.ParseTitle();
 
 var total = Directory.GetFiles(contentDir).Length;
@@ -15,24 +25,20 @@ var count = 0;
 foreach (var info in FileParser.GetEpisodeFiles(contentDir))
 {
     var name = FileParser.GetTitleName(episodes, info);
-    Debug(Path.GetFileName(info.FileName), name);
-    
-    File.Move(info.FileName, Path.Combine(contentDir, name));
-    count++;
+
+    if (options.DryRun)
+    {
+        Console.WriteLine(name);
+    }
+    else
+    {
+        File.Move(info.FileName, Path.Combine(contentDir, name));
+        count++;
+    }
 }
 
 Console.WriteLine($"Сериал: {title}");
 Console.WriteLine($"Всего файлов: {total}");
-Console.WriteLine($"Переменовано: {count}");
+Console.WriteLine($"Переименовано: {count}");
 
 Input.Exit();
-
-void Debug(string oldName, string newName)
-{
-    #if DEBUG
-    Console.WriteLine($"Старое название: {oldName}");
-    Console.WriteLine($"Новое название: {newName}");
-    Console.WriteLine("Продолжить?");
-    Console.ReadLine();
-    #endif
-}

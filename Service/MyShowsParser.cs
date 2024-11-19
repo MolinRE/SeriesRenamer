@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using SeriesRenamer.Helpers;
 using SeriesRenamer.Models;
+using System.Net;
 
 namespace SeriesRenamer.Service;
 
@@ -20,7 +21,7 @@ public class MyShowsParser
         var container = _htmlDocument.DocumentNode.Descendants().FirstOrDefault(p => p.Id == "episodes");
         foreach (var season in container.Elements("div").Where(p => p.HasClass("episodes-by-season__season")))
         {
-            var seasonName = season.Descendants("h3").First(p => p.HasClass("title__main")).Element("a").GetText();
+            var seasonName = season.Descendants("h3").First(p => p.HasClass("title__main-text")).Element("a").GetText();
             var seasonNumber = int.Parse(seasonName.Split(' ')[0]);
 
             foreach (var episodeNode in season.Descendants("div").Where(p => p.HasClass("RowEpisodeBySeason")))
@@ -32,12 +33,11 @@ public class MyShowsParser
                 {
                     var episodeNumber = int.Parse(episodeNumberText);
             
-                    // Console.WriteLine($"Сезон {seasonNumber}, эпизод {episodeNumber}: {episodeTitle}");
                     result.Add(new MyShowsEpisode
                     {
-                        S = seasonNumber,
-                        E = episodeNumber,
-                        Title = episodeTitle
+                        SeasonNumber = seasonNumber,
+                        EpisodeNumber = episodeNumber,
+                        EpisodeTitle = episodeTitle
                     });
                 }
             }
@@ -48,6 +48,27 @@ public class MyShowsParser
 
     public string ParseTitle()
     {
-        return "Lost";
+        var title = string.Empty;
+        var originalTitle = string.Empty;
+        
+        var titleMainText = _htmlDocument.DocumentNode
+            .Descendants("h1")
+            .FirstOrDefault(p => p.HasClass("title__main-text"));
+
+        if (titleMainText != null)
+        {
+            title = WebUtility.HtmlDecode(titleMainText.InnerText.Trim());
+        }
+
+        var showDetailsOriginal = _htmlDocument.DocumentNode
+            .Descendants("div")
+            .FirstOrDefault(p => p.HasClass("ShowDetails-original"));
+
+        if (showDetailsOriginal != null)
+        {
+            originalTitle = WebUtility.HtmlDecode(showDetailsOriginal.InnerText.Trim());
+        }
+
+        return $"{title} ({originalTitle})";
     }
 }

@@ -18,7 +18,7 @@ S3E3. Further Instructions.mkv
 
 ## Как запустить
 
-Скачать и установить [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+Скачать и установить [.NET 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
 Скачать ZIP-архив из последнего [релиза](https://github.com/MolinRE/SeriesRenamer/releases), распаковать.
 

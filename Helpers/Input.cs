@@ -35,7 +35,7 @@ public static class Input
 
     public static string? AskSeriesUrl()
     {
-        Console.Write("Введите адрес страницы сериала на MyShows: ");
+        Console.Write("Введите адрес страницы или идентификатор сериала на MyShows: ");
         return Input.ReadLine();
     }
 

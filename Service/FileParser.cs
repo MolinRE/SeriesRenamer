@@ -6,7 +6,7 @@ namespace SeriesRenamer.Service;
 
 public class FileParser
 {
-    public static readonly Regex RxEpisodeInfo = new(@".+?S(\d\d)E(\d\d).+?", RegexOptions.Compiled);
+    public static readonly Regex RxEpisodeInfo = new(@".+?S(\d\d)E(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     public static IEnumerable<EpisodeFile> GetEpisodeFiles(string directory)
     {
@@ -32,9 +32,9 @@ public class FileParser
         var ext = Path.GetExtension(fileEp.FileName);
         foreach (var e in eps)
         {
-            if (e.E == fileEp.E && e.S == fileEp.S)
+            if (e.EpisodeNumber == fileEp.E && e.SeasonNumber == fileEp.S)
             {
-                return $"S{e.S:##}E{e.E:##}. {CleanTitle(e.Title)}{ext}";
+                return $"S{e.SeasonNumber:##}E{e.EpisodeNumber:##}. {CleanTitle(e.EpisodeTitle)}{ext}";
             }
         }
 

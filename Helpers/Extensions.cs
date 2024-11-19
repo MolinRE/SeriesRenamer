@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using System.Net;
 
 namespace SeriesRenamer.Helpers;
 
@@ -6,7 +7,7 @@ public static class Extensions
 {
     public static string GetText(this HtmlNode node)
     {
-        return node.InnerText.Trim();
+        return WebUtility.HtmlDecode(node.InnerText.Trim());
     }
     
     public static int GetInt(this HtmlNode node)

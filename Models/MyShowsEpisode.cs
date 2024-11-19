@@ -8,20 +8,25 @@ public class MyShowsEpisode
     /// <summary>
     /// Номер сезона
     /// </summary>
-    public int S { get; set; }
+    public int SeasonNumber { get; set; }
     
     /// <summary>
     /// Номер эпизода
     /// </summary>
-    public int E { get; set; }
+    public int EpisodeNumber { get; set; }
 
     /// <summary>
     /// Название эпизода
     /// </summary>
-    public string Title { get; set; }
+    public string EpisodeTitle { get; set; }
     
     /// <summary>
     /// Дата выхода эпизода
     /// </summary>
     public DateOnly? Aired { get; set; }
+
+    public override string ToString()
+    {
+        return $"S{SeasonNumber:##}E{EpisodeNumber:##}. {EpisodeTitle}";
+    }
 }
