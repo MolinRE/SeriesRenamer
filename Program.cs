@@ -1,11 +1,10 @@
-﻿using CacheClient;
-using SeriesRenamer;
+﻿using SeriesRenamer;
 using SeriesRenamer.Helpers;
 using SeriesRenamer.Service;
 
 var options = CommandLine.Parser.Default.ParseArguments<AppOptions>(args).Value;
 
-var client = new HttpCacheClient(Environment.GetEnvironmentVariable("CACHE_DIR")!);
+var client = new HttpClient();
 
 var contentDir = Input.AskContentDir();
 var seriesUrl = Input.AskSeriesUrl();
