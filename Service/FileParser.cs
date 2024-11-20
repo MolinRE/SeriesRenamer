@@ -8,10 +8,13 @@ public class FileParser
 {
     public static readonly Regex RxEpisodeInfo = new(@".+?S(\d\d)E(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+    public static readonly Regex RxEpisodeInfo2 = new(@".+?(\d\d)\-(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    
+    
     public static IEnumerable<EpisodeFile> GetEpisodeFiles(string directory)
     {
         return Directory.GetFiles(directory)
-            .Where(p => RxEpisodeInfo.IsMatch(p))
+            .Where(p => RxEpisodeInfo.IsMatch(p) || RxEpisodeInfo2.IsMatch(p))
             .OrderBy(s => s)
             .Select(ParseFileName);
     }
@@ -22,6 +25,14 @@ public class FileParser
         if (m.Success)
         {
             return new EpisodeFile(int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value), fileName);
+        }
+        else
+        {
+            m = RxEpisodeInfo2.Match(fileName);
+            if (m.Success)
+            {
+                return new EpisodeFile(int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value), fileName);
+            }
         }
 
         return null;
