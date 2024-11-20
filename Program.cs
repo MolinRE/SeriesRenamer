@@ -31,7 +31,8 @@ foreach (var info in FileParser.GetEpisodeFiles(contentDir))
     }
     else
     {
-        File.Move(info.FileName, Path.Combine(contentDir, name));
+        var outputDir = string.IsNullOrEmpty(options.DestinationFolder) ? contentDir : options.DestinationFolder;
+        File.Move(info.FileName, Path.Combine(outputDir, name));
         count++;
     }
 }

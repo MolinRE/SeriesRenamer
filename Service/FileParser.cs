@@ -38,16 +38,18 @@ public class FileParser
         return null;
     }
 
-    public static string GetTitleName(List<MyShowsEpisode> eps, EpisodeFile fileEp)
+    public static string GetTitleName(List<MyShowsEpisode> episodes, EpisodeFile episodeFile)
     {
-        var ext = Path.GetExtension(fileEp.FileName);
-        foreach (var e in eps)
+        var ext = Path.GetExtension(episodeFile.FileName);
+        foreach (var ep in episodes)
         {
-            if (e.EpisodeNumber == fileEp.E && e.SeasonNumber == fileEp.S)
+            if (ep.EpisodeNumber == episodeFile.E && ep.SeasonNumber == episodeFile.S)
             {
-                return $"S{e.SeasonNumber:##}E{e.EpisodeNumber:##}. {CleanTitle(e.EpisodeTitle)}{ext}";
+                return $"S{ep.SeasonNumber:##}E{ep.EpisodeNumber:##}. {CleanTitle(ep.EpisodeTitle)}{ext}";
             }
         }
+
+        throw new ArgumentException($"В списке эпизодов нет указанного файла ({episodeFile})", nameof(episodeFile));
 
         string CleanTitle(string str)
         {
@@ -59,7 +61,5 @@ public class FileParser
 
             return sb.Length == 0 ? str : sb.ToString();
         }
-
-        return null;
     }
 }

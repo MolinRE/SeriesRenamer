@@ -14,4 +14,6 @@ public class EpisodeFile
         E = e;
         FileName = fileName;
     }
+
+    public override string ToString() => FileName;
 }
