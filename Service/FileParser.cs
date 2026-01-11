@@ -6,36 +6,42 @@ namespace SeriesRenamer.Service;
 
 public class FileParser
 {
-    public static readonly Regex RxEpisodeInfo = new(@".+?S(\d\d)E(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-    public static readonly Regex RxEpisodeInfo2 = new(@".+?(\d\d)\-(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    
+    public static readonly Regex[] RxEpisodeInfos = new[]
+    {
+        new Regex(@".+?S(\d\d)E(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+        new Regex(@".+?(\d\d)\-(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+        new Regex(@".+?\-\s?(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase) // anime format
+    };
     
     public static IEnumerable<EpisodeFile> GetEpisodeFiles(string directory)
     {
-        return Directory.GetFiles(directory)
-            .Where(p => RxEpisodeInfo.IsMatch(p) || RxEpisodeInfo2.IsMatch(p))
-            .OrderBy(s => s)
-            .Select(ParseFileName);
-    }
-    
-    public static EpisodeFile ParseFileName(string fileName)
-    {
-        var m = RxEpisodeInfo.Match(fileName);
-        if (m.Success)
+        var di = new DirectoryInfo(directory);
+        var files = di.GetFiles().OrderBy(p => p.Name).ToArray();
+        var result = new List<EpisodeFile>(files.Length);
+        foreach (var fileInfo in files)
         {
-            return new EpisodeFile(int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value), fileName);
-        }
-        else
-        {
-            m = RxEpisodeInfo2.Match(fileName);
-            if (m.Success)
+            foreach (var regex in RxEpisodeInfos)
             {
-                return new EpisodeFile(int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value), fileName);
+                if (regex.IsMatch(fileInfo.Name))
+                {
+                    result.Add(ParseFileName(regex, fileInfo));
+                }
             }
         }
 
-        return null;
+        return result;
+    }
+    
+    public static EpisodeFile ParseFileName(Regex regex, FileInfo file)
+    {
+        var fileName = file.FullName;
+        var m = regex.Match(file.Name);
+        if (m.Groups.Count == 3)
+        {
+            return new EpisodeFile(int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value), fileName);
+        }
+            
+        return new EpisodeFile(1, int.Parse(m.Groups[1].Value), fileName);
     }
 
     public static string GetTitleName(List<MyShowsEpisode> episodes, EpisodeFile episodeFile)
@@ -43,7 +49,7 @@ public class FileParser
         var ext = Path.GetExtension(episodeFile.FileName);
         foreach (var ep in episodes)
         {
-            if (ep.EpisodeNumber == episodeFile.E && ep.SeasonNumber == episodeFile.S)
+            if (ep.EpisodeNumber == episodeFile.EpisodeNumber && ep.SeasonNumber == episodeFile.SeasonNumber)
             {
                 return $"S{ep.SeasonNumber:##}E{ep.EpisodeNumber:##}. {CleanTitle(ep.EpisodeTitle)}{ext}";
             }

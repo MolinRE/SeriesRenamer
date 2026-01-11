@@ -1,29 +1,29 @@
 ﻿using SeriesRenamer;
 using SeriesRenamer.Helpers;
 using SeriesRenamer.Service;
+using SeriesRenamer.Service.MyShows;
 
 var options = CommandLine.Parser.Default.ParseArguments<AppOptions>(args).Value;
 
-var client = new HttpClient();
-
 var contentDir = Input.AskContentDir();
-var seriesUrl = Input.AskSeriesUrl();
-if (int.TryParse(seriesUrl, out var showId))
+var showId = Input.AskSeriesUrl();
+if (showId.StartsWith("https"))
 {
-    seriesUrl = $"https://myshows.me/view/{showId}/";
+    showId = showId.Trim('/');
+    showId = showId.Substring(showId.LastIndexOf('/') + 1);
 }
 
-var request = await client.GetAsync(seriesUrl);
-var myShowsParser = new MyShowsParser(await request.Content.ReadAsStringAsync());
-var episodes = myShowsParser.ParseEpisodes();
-var seasons = episodes.GroupBy(p => p.SeasonNumber).ToArray();
-var title = myShowsParser.ParseTitle();
+var client = new MyShowsClient();
+var show = await client.GetById(int.Parse(showId));
+var episodes = show.Episodes;
+var title = show.Title;
 
 var total = Directory.GetFiles(contentDir).Length;
 var count = 0;
-foreach (var info in FileParser.GetEpisodeFiles(contentDir))
+var episodesFiles = FileParser.GetEpisodeFiles(contentDir);
+foreach (var episodeFile in episodesFiles)
 {
-    var name = FileParser.GetTitleName(episodes, info);
+    var name = FileParser.GetTitleName(episodes, episodeFile);
 
     if (options.DryRun)
     {
@@ -32,7 +32,7 @@ foreach (var info in FileParser.GetEpisodeFiles(contentDir))
     else
     {
         var outputDir = string.IsNullOrEmpty(options.DestinationFolder) ? contentDir : options.DestinationFolder;
-        File.Move(info.FileName, Path.Combine(outputDir, name));
+        File.Move(episodeFile.FileName, Path.Combine(outputDir, name));
         count++;
     }
 }

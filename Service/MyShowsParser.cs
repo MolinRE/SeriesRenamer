@@ -19,7 +19,7 @@ public class MyShowsParser
         var result = new List<MyShowsEpisode>();
     
         var container = _htmlDocument.DocumentNode.Descendants().FirstOrDefault(p => p.Id == "episodes");
-        foreach (var season in container.Elements("div").Where(p => p.HasClass("episodes-by-season__season")))
+        foreach (var season in container.Elements("div").Where(p => p.HasClass("EpisodesBySeason__season")))
         {
             var seasonName = season.Descendants("h3").First(p => p.HasClass("title__main-text")).Element("a").GetText();
             var seasonNumber = int.Parse(seasonName.Split(' ')[0]);

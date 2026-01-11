@@ -2,16 +2,16 @@ namespace SeriesRenamer.Models;
 
 public class EpisodeFile
 {
-    public int S { get; set; }
+    public int SeasonNumber { get; set; }
     
-    public int E { get; set; }
+    public int EpisodeNumber { get; set; }
 
     public string FileName { get; set; }
 
-    public EpisodeFile(int s, int e, string fileName)
+    public EpisodeFile(int seasonNumber, int episodeNumber, string fileName)
     {
-        S = s;
-        E = e;
+        SeasonNumber = seasonNumber;
+        EpisodeNumber = episodeNumber;
         FileName = fileName;
     }
 
