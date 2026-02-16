@@ -2,6 +2,7 @@ using SeriesRenamer.Models;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using SeriesRenamer.Service.MyShows.Models;
 
 namespace SeriesRenamer.Service.MyShows;
 
@@ -27,11 +28,12 @@ public class MyShowsClient
         var response = await client.SendAsync(request);
         
         var str = await response.Content.ReadAsByteArrayAsync();
-        var root = JsonSerializer.Deserialize<Root>(str)!;
+        var root = JsonSerializer.Deserialize<GetByIdResponse>(str)!;
 
         return new MyShowsShow()
         {
             Title = root.Result.Title,
+            TitleOriginal = root.Result.TitleOriginal,
             Episodes = root.Result.Episodes.Select(s => new MyShowsEpisode()
             {
                 Aired = DateOnly.FromDateTime(DateTime.Parse(s.AirDate)),
