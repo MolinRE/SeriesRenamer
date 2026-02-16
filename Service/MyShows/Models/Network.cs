@@ -2,6 +2,7 @@
 
 namespace SeriesRenamer.Service.MyShows.Models;
 
+#pragma warning disable CS8618
 public class Network
 {
     [JsonPropertyName("id")]

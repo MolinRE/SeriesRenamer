@@ -17,7 +17,7 @@ foreach (var episodeFile in episodesFiles)
 {
     var name = FileParser.GetTitleName(show.Episodes, episodeFile);
 
-    if (options.DryRun)
+    if (options.DryRun == true)
     {
         Console.WriteLine(name);
     }

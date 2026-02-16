@@ -6,15 +6,15 @@ public class MyShowsShow
     /// <summary>
     /// Название сериала на русском языке
     /// </summary>
-    public string Title { get; init; }
+    public required string Title { get; init; }
     
     /// <summary>
     /// Название сериала на английском
     /// </summary>
-    public string TitleOriginal { get; set; }
+    public required string TitleOriginal { get; init; }
     
     /// <summary>
     /// Список эпизодов сериала
     /// </summary>
-    public List<MyShowsEpisode> Episodes { get; init; }
+    public required List<MyShowsEpisode> Episodes { get; init; }
 }

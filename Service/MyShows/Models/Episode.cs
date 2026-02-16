@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace SeriesRenamer.Service.MyShows.Models;
 
+#pragma warning disable CS8618
 public class Episode
 {
     [JsonPropertyName("id")]

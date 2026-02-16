@@ -18,7 +18,7 @@ public class MyShowsEpisode
     /// <summary>
     /// Название эпизода
     /// </summary>
-    public string EpisodeTitle { get; set; }
+    public required string EpisodeTitle { get; set; }
     
     /// <summary>
     /// Дата выхода эпизода
