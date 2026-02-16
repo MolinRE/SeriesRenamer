@@ -10,10 +10,11 @@ public class FileParser
     {
         new Regex(@".+?S(\d\d)E(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase),
         new Regex(@".+?(\d\d)\-(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+        new Regex(@"S(\d+).*?E(\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
         new Regex(@".+?\-\s?(\d\d).+?", RegexOptions.Compiled | RegexOptions.IgnoreCase) // anime format
     };
     
-    public static IEnumerable<EpisodeFile> GetEpisodeFiles(string directory)
+    public static List<EpisodeFile> GetEpisodeFiles(string directory)
     {
         var di = new DirectoryInfo(directory);
         var files = di.GetFiles().OrderBy(p => p.Name).ToArray();
