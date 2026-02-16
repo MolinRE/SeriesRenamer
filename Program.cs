@@ -6,24 +6,16 @@ using SeriesRenamer.Service.MyShows;
 var options = CommandLine.Parser.Default.ParseArguments<AppOptions>(args).Value;
 
 var contentDir = Input.AskContentDir();
-var showId = Input.AskSeriesUrl();
-if (showId.StartsWith("https"))
-{
-    showId = showId.Trim('/');
-    showId = showId.Substring(showId.LastIndexOf('/') + 1);
-}
+var showId = Input.AskShowId();
 
 var client = new MyShowsClient();
-var show = await client.GetById(int.Parse(showId));
-var episodes = show.Episodes;
-var title = show.Title;
+var show = await client.GetById(showId);
 
-var total = Directory.GetFiles(contentDir).Length;
 var count = 0;
 var episodesFiles = FileParser.GetEpisodeFiles(contentDir);
 foreach (var episodeFile in episodesFiles)
 {
-    var name = FileParser.GetTitleName(episodes, episodeFile);
+    var name = FileParser.GetTitleName(show.Episodes, episodeFile);
 
     if (options.DryRun)
     {
@@ -37,8 +29,8 @@ foreach (var episodeFile in episodesFiles)
     }
 }
 
-Console.WriteLine($"Сериал: {title}");
-Console.WriteLine($"Всего файлов: {total}");
+Console.WriteLine($"Сериал: {show.Title} ({show.TitleOriginal})");
+Console.WriteLine($"Удалось распознать: {episodesFiles.Count}");
 Console.WriteLine($"Переименовано: {count}");
 
 Input.Exit();

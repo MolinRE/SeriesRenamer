@@ -18,7 +18,7 @@ S3E3. Further Instructions.mkv
 
 ## Как запустить
 
-Скачать и установить [.NET 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+Скачать и установить [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0/runtime)
 
 Скачать ZIP-архив из последнего [релиза](https://github.com/MolinRE/SeriesRenamer/releases), распаковать.
 
@@ -31,5 +31,6 @@ dotnet SeriesRenamer.dll
 
 Параметры запуска:
 ```
--t --test   Запуск без переименовывания файлов.
+-t --test Запуск без переименовывания файлов.
+-d --destination Папка с переименованными сериями, если требуется скопировать их в другое место
 ```
